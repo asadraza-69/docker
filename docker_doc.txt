@@ -1,0 +1,144 @@
+
+
+------------------------DOCKERIZE DJANGO APPLICATION IN UBUNTU----------------------------------
+
+
+
+1) First run this command for update your os dependencies
+	
+sudo apt-get update
+
+
+2)Run this command for fetches the Docker package from the repositories and installs it on your system.
+
+
+sudo apt install docker.io
+
+
+3)Run this command for so the command will download and install the Docker package from the Snap Store, which is a central repository for snap packages. It will also handle the installation of any necessary dependencies and set up the Docker runtime environment on your system.
+
+
+sudo snap install docker
+
+
+4)Now run this command for check your docker version
+
+docker --version
+
+
+5)Run this command for pulling or download any docker image/container
+
+sudo docker run (image name)
+
+
+
+6)After this run this command to check all docker image/container in your system
+
+sudo docker images
+
+
+7)Run this command to check all running docker image/container in your system
+
+sudo docker ps
+
+
+8)Run this command to all available docker image/container in your system 
+
+sudo docker ps -a
+
+
+9)Clone or make any django project and install Docker extension (microsoft) and make Docker file in your project directory name (Dockerfile)
+
+10)In the Dockerfile write this code:
+note:"any python version you want to use"
+
+FROM python:3.10-slim-buster
+
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+
+RUN pip3 install -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD python manage.py runserver 0.0.0.0:8000
+
+
+11)Run this command to install all dependencies in your Docker that your project need 
+
+sudo docker build -t myapp .
+
+12)After this make a file in your project directory name (docker-compose.yml)
+
+13)Then write these codes of lines in your docker-compose.yml file
+
+
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@example.com', 'adm1n@123')\" | python manage.py shell && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=lambda_api
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=roOt@5
+
+
+
+14)Then run this command to run docker-compose file 
+
+sudo docker-compose up --build
+
+
+15)After this we forget to make super user for django admin now what we can do is that we open docker termminal for this 
+first you check all images in your system command is
+
+sudo docker ps -a
+
+output:
+CONTAINER ID           IMAGE                       COMMAND                  CREATED          STATUS                      PORTS     NAMES
+9ff0241e7711     django_project_lambda-web   "bash -c 'python man…"   19 seconds ago   Exited (1) 16 seconds ago                myapp
+
+16)now to open docker termminal run this command
+                 9ff0241e7711
+sudo docker exec -it (CONTAINER ID ) bash
+
+note: if you want to run any command without going in a docker termminal run this command
+
+sudo docker-compose run web python manage.py createsuperuser
+
+17)for restart the docker container run this command
+sudo docker-compose restart
+
+18)if you want to stop the running docker container run this command
+sudo docker-compose down
+
+19)if you want to start docker container run this command
+sudo docker-compose down
+
+20)if you change something in the docker-compose.yml file after this run this command
+sudo docker-compose up
+
+
+
+
+
+
+
+
+
+
