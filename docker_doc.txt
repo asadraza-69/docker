@@ -136,7 +136,7 @@ sudo docker-compose up
 
 
 
-
+ View summary of image vulnerabilities and recommendations → docker scout quickview
 
 
 
